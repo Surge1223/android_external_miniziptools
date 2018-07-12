@@ -1,0 +1,7 @@
+libs/
+obj/
+*.o
+*.so
+minzip
+minunz
+miniunz

@@ -11,7 +11,7 @@
          Changes
 
     Oct-2009 - Defined ZPOS64_T to fpos_t on windows and u_int64_t on linux. (might need to find a better why for this)
-    Oct-2009 - Change to fseeko64, ftello64 and fopen64 so large files would work on linux.
+    Oct-2009 - Change to fseeko64, ftello64 and fopen so large files would work on linux.
                More if/def section may be needed to support other platforms
     Oct-2009 - Defined fxxxx64 calls to normal fopen/ftell/fseek so they would compile on windows.
                           (but you should use iowin32.c for windows instead)
@@ -45,12 +45,12 @@
 #include "zlib.h"
 
 #if defined(USE_FILE32API)
-#define fopen64 fopen
+#define fopen fopen
 #define ftello64 ftell
 #define fseeko64 fseek
 #else
 #ifdef _MSC_VER
- #define fopen64 fopen
+ #define fopen fopen
  #if (_MSC_VER >= 1400) && (!(defined(NO_MSCVER_FILE64_FUNC)))
   #define ftello64 _ftelli64
   #define fseeko64 _fseeki64
@@ -163,7 +163,6 @@ typedef struct zlib_filefunc64_def_s
     voidpf              opaque;
 } zlib_filefunc64_def;
 
-void fill_fopen64_filefunc OF((zlib_filefunc64_def* pzlib_filefunc_def));
 void fill_fopen_filefunc OF((zlib_filefunc_def* pzlib_filefunc_def));
 
 /* now internal definition, only for zip.c and unzip.h */

@@ -12,7 +12,6 @@
          Copyright (C) 2009-2010 Mathias Svensson ( http://result42.com )
 */
 
-#ifndef _WIN32
         #ifndef __USE_FILE_OFFSET64
                 #define __USE_FILE_OFFSET64
         #endif
@@ -25,7 +24,6 @@
         #ifndef _FILE_OFFSET_BIT
                 #define _FILE_OFFSET_BIT 64
         #endif
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,13 +32,8 @@
 #include <errno.h>
 #include <fcntl.h>
 
-#ifdef unix
 # include <unistd.h>
 # include <utime.h>
-#else
-# include <direct.h>
-# include <io.h>
-#endif
 
 #include "unzip.h"
 
@@ -48,10 +41,6 @@
 #define WRITEBUFFERSIZE (8192)
 #define MAXFILENAME (256)
 
-#ifdef _WIN32
-#define USEWIN32IOAPI
-#include "iowin32.h"
-#endif
 /*
   mini unzip, demo of unzip package
 
@@ -364,7 +353,7 @@ int do_extract_currentfile(uf,popt_extract_without_path,popt_overwrite,password)
         {
             char rep=0;
             FILE* ftestexist;
-            ftestexist = fopen64(write_filename,"rb");
+            ftestexist = fopen(write_filename,"rb");
             if (ftestexist!=NULL)
             {
                 fclose(ftestexist);
@@ -395,7 +384,7 @@ int do_extract_currentfile(uf,popt_extract_without_path,popt_overwrite,password)
 
         if ((skip==0) && (err==UNZ_OK))
         {
-            fout=fopen64(write_filename,"wb");
+            fout=fopen(write_filename,"wb");
 
             /* some zipfile don't contain directory alone before file */
             if ((fout==NULL) && ((*popt_extract_without_path)==0) &&
@@ -405,7 +394,7 @@ int do_extract_currentfile(uf,popt_extract_without_path,popt_overwrite,password)
                 *(filename_withoutpath-1)='\0';
                 makedir(write_filename);
                 *(filename_withoutpath-1)=c;
-                fout=fopen64(write_filename,"wb");
+                fout=fopen(write_filename,"wb");
             }
 
             if (fout==NULL)
