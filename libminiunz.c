@@ -540,6 +540,7 @@ int miniunz_main(argc,argv)
     int opt_extractdir=0;
     const char *dirname=NULL;
     unzFile uf=NULL;
+    FILE *fl = NULL;
 
     do_banner();
     if (argc==1)
@@ -624,7 +625,7 @@ int miniunz_main(argc,argv)
         }
 
         if (filename_to_extract == NULL)
-            ret_value = do_extract(uf, opt_do_extract_withoutpath, opt_overwrite, password);
+            ret_value = do_extract(uf, opt_do_extract_withoutpath, opt_overwrite, password, NULL);
         else
             ret_value = do_extract_onefile(uf, filename_to_extract, opt_do_extract_withoutpath, opt_overwrite, password);
     }

@@ -1,7 +1,6 @@
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
-
 LOCAL_MODULE := libminiunz
 LOCAL_C_INCLUDES := \
     external/zlib \
@@ -13,11 +12,18 @@ LOCAL_C_INCLUDES := \
     system/core/libcutils \
     system/core/libcutils/include \
     $(LOCAL_PATH)
-LOCAL_SRC_FILES := libminiunz.c ioapi.c
 
-LOCAL_CFLAGS := -O2 -DUSE_FILE32API -Wall -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable -Wno-incompatible-pointer-types -Wno-incompatible-pointer-types-discards-qualifiers
-#LOCAL_LDFLAGS := -lz -llog
-LOCAL_STATIC_LIBRARIES := libz liblog
+LOCAL_SRC_FILES := libminiunz.c ioapi.c
+LOCAL_CFLAGS := \
+  -DUSE_FILE32API -Wall \
+  -O2 -fpic -fPIC \
+  -pipe -fno-strict-aliasing \
+  -D_GNU_SOURCE  \
+  -D__BIONIC__ -DANDROID \
+  -D__ANDROID__ -DZLIB_CONST
+
+LOCAL_STATIC_LIBRARIES :=  liblog libz libc
+
 include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
@@ -32,12 +38,17 @@ LOCAL_C_INCLUDES := \
     system/core/libcutils \
     system/core/libcutils/include \
     $(LOCAL_PATH)
-LOCAL_SRC_FILES := miniunz.c unzip.c ioapi.c
-LOCAL_CFLAGS := -O2 -DUSE_FILE32API -Wall -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable -Wno-incompatible-pointer-types -Wno-incompatible-pointer-types-discards-qualifiers
-LOCAL_STATIC_LIBRARIES := libz liblog libc++_static
-#LOCAL_LDLIBS := -lz -llog
-LOCAL_STATIC_LIBRARIES := libz liblog libc++_static libminiunz
+LOCAL_SRC_FILES := miniunz.c unzip.c
+LOCAL_CFLAGS := \
+  -DUSE_FILE32API -Wall \
+  -O2 -fpic -fPIC \
+  -pipe -fno-strict-aliasing \
+  -D_GNU_SOURCE  \
+  -D__BIONIC__ -DANDROID \
+  -D__ANDROID__ -DZLIB_CONST
+
 LOCAL_FORCE_STATIC_EXECUTABLE := true
+LOCAL_STATIC_LIBRARIES := libz liblog libminiunz
 LOCAL_LDFLAGS :=  -static
 include $(BUILD_EXECUTABLE)
 
@@ -53,12 +64,18 @@ LOCAL_C_INCLUDES := \
     system/core/libcutils \
     system/core/libcutils/include \
     $(LOCAL_PATH)
-LOCAL_SRC_FILES := minizip.c zip.c ioapi.c
 
-LOCAL_CFLAGS := -O2 -DUSE_FILE32API -Wall -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable -Wno-incompatible-pointer-types -Wno-incompatible-pointer-types-discards-qualifiers
-#LOCAL_LDLIBS := -lz -llog
-LOCAL_STATIC_LIBRARIES := libz liblog libc++_static libminiunz
+LOCAL_SRC_FILES := minizip.c zip.c
+LOCAL_CFLAGS := \
+  -DUSE_FILE32API -Wall \
+  -O2 -fpic -fPIC \
+  -pipe -fno-strict-aliasing \
+  -D_GNU_SOURCE  \
+  -D__BIONIC__ -DANDROID \
+  -D__ANDROID__ -DZLIB_CONST
+
 LOCAL_FORCE_STATIC_EXECUTABLE := true
+LOCAL_STATIC_LIBRARIES := libz liblog libminiunz
 LOCAL_LDFLAGS :=  -static
 include $(BUILD_EXECUTABLE)
 

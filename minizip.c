@@ -13,7 +13,6 @@
 */
 
 
-#ifndef _WIN32
         #ifndef __USE_FILE_OFFSET64
                 #define __USE_FILE_OFFSET64
         #endif
@@ -26,7 +25,6 @@
         #ifndef _FILE_OFFSET_BIT
                 #define _FILE_OFFSET_BIT 64
         #endif
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,40 +45,9 @@
 
 #include "zip.h"
 
-#ifdef _WIN32
-        #define USEWIN32IOAPI
-        #include "iowin32.h"
-#endif
-
-
-
 #define WRITEBUFFERSIZE (16384)
 #define MAXFILENAME (256)
 
-#ifdef _WIN32
-uLong filetime(f, tmzip, dt)
-    char *f;                /* name of file to get info on */
-    tm_zip *tmzip;             /* return value: access, modific. and creation times */
-    uLong *dt;             /* dostime */
-{
-  int ret = 0;
-  {
-      FILETIME ftLocal;
-      HANDLE hFind;
-      WIN32_FIND_DATAA ff32;
-
-      hFind = FindFirstFileA(f,&ff32);
-      if (hFind != INVALID_HANDLE_VALUE)
-      {
-        FileTimeToLocalFileTime(&(ff32.ftLastWriteTime),&ftLocal);
-        FileTimeToDosDateTime(&ftLocal,((LPWORD)dt)+1,((LPWORD)dt)+0);
-        FindClose(hFind);
-        ret = 1;
-      }
-  }
-  return ret;
-}
-#else
 #ifdef unix
 uLong filetime(f, tmzip, dt)
     char *f;               /* name of file to get info on */
@@ -131,7 +98,6 @@ uLong filetime(f, tmzip, dt)
 {
     return 0;
 }
-#endif
 #endif
 
 
@@ -357,13 +323,7 @@ int main(argc,argv)
     {
         zipFile zf;
         int errclose;
-#        ifdef USEWIN32IOAPI
-        zlib_filefunc64_def ffunc;
-        fill_win32_filefunc64A(&ffunc);
-        zf = zipOpen2_64(filename_try,(opt_overwrite==2) ? 2 : 0,NULL,&ffunc);
-#        else
         zf = zipOpen64(filename_try,(opt_overwrite==2) ? 2 : 0);
-#        endif
 
         if (zf == NULL)
         {
